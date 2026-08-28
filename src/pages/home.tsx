@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import QuestModal from "../components/site/QuestModal";
-import { FONT_LINK, HOME_CSS } from "../components/retro/theme";
-import {
-  BRAND, CLASSES, FAQS, GALLERY, HUD, OPENSEA_URL,
-  ROADMAP, SYSTEMS, TRAITS, X_URL,
-} from "../content";
+import WaitlistModal from "./components/site/WaitlistModal";
+import { FONT_LINK, HOME_CSS } from "./components/retro/theme";
+import { BRAND, FAQS, LORE, PATH, STATUS, VISION, X_URL } from "./content";
 
 /* ── Reveal a panel once it scrolls into view ── */
 function Panel({
@@ -31,41 +28,6 @@ function Panel({
         {children}
       </div>
     </section>
-  );
-}
-
-/* ── Auto-advancing portrait frame ── */
-function Gallery() {
-  const [i, setI] = useState(0);
-  const [fade, setFade] = useState(false);
-
-  useEffect(() => {
-    const t = window.setTimeout(() => {
-      setFade(true);
-      window.setTimeout(() => {
-        setI((n) => (n + 1) % GALLERY.length);
-        setFade(false);
-      }, 240);
-    }, 3200);
-    return () => window.clearTimeout(t);
-  }, [i]);
-
-  return (
-    <div className="hm-gal">
-      <div className="hm-frame">
-        <img src={GALLERY[i]} alt="" style={{ opacity: fade ? 0 : 1 }} />
-      </div>
-      <div className="hm-dots">
-        {GALLERY.map((_, n) => (
-          <button
-            key={n}
-            data-on={n === i}
-            aria-label={`Show character ${n + 1}`}
-            onClick={() => setI(n)}
-          />
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -108,19 +70,21 @@ export default function Home() {
           <span>{BRAND.name}</span>
         </a>
         <nav className="hm-nav">
-          <a href="#minolist">LIST</a>
-          <a href="#mint">MINT</a>
-          <a className="hm-x" href={X_URL} target="_blank" rel="noopener noreferrer" aria-label="Follow on X">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z" />
-            </svg>
-          </a>
+          <a href="#vision">VISION</a>
+          <a href="#path">PATH</a>
+          {X_URL && (
+            <a className="hm-x" href={X_URL} target="_blank" rel="noopener noreferrer" aria-label="Follow on X">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z" />
+              </svg>
+            </a>
+          )}
         </nav>
       </header>
 
       {/* ── Hero ── */}
       <div className="hm-hero" id="top">
-        <span className="hm-badge">{BRAND.supply} ON {BRAND.chain.toUpperCase()}</span>
+        <span className="hm-badge">UNANNOUNCED · PRE-MINT</span>
         <h1 className="hm-title">
           {BRAND.name.slice(0, 5)}
           <b>{BRAND.name.slice(5)}</b>
@@ -130,15 +94,15 @@ export default function Home() {
 
         <div className="hm-cta">
           <button className="hm-btn" onClick={() => setModal(true)}>
-            JOIN {BRAND.list.toUpperCase()}
+            JOIN THE LIST
           </button>
-          <a className="hm-btn hm-btn--ghost" href="#mint">
-            VIEW MINT
+          <a className="hm-btn hm-btn--ghost" href="#vision">
+            SEE THE VISION
           </a>
         </div>
 
         <div className="hm-hud">
-          {HUD.map(([v, l]) => (
+          {STATUS.map(([v, l]) => (
             <div key={l}>
               <b>{v}</b>
               <span>{l}</span>
@@ -149,130 +113,27 @@ export default function Home() {
 
       <Rule />
 
-      {/* ── Collection ── */}
-      <Panel tab="THE COLLECTION">
-        <h2 className="hm-h2">MEET THE ROSTER</h2>
-        <p className="hm-p">
-          {BRAND.supply} pixel characters built on simple art and traits you can read
-          at a glance.
-        </p>
-        <Gallery />
-      </Panel>
-
-      <Rule />
-
-      {/* ── Traits ── */}
-      <Panel tab="TRAITS">
-        <h2 className="hm-h2">BUILT DIFFERENT</h2>
-        <p className="hm-p">
-          Every character is mixed from outfits, hair, moods, colors, accessories,
-          and rare details.
-        </p>
-        <div className="hm-grid2">
-          {TRAITS.map((t) => (
-            <div className="hm-cell" key={t}>
-              <i />
-              <span>{t}</span>
-            </div>
-          ))}
-        </div>
-        <p className="hm-p" style={{ margin: "26px 0 0" }}>
-          Some traits are simple. Some are rare. Some make a character land the
-          second you see it.
-        </p>
-      </Panel>
-
-      <Rule />
-
-      {/* ── Classes ── */}
-      <Panel tab="CLASSES">
-        <h2 className="hm-h2">EVERY ONE HAS A CLASS</h2>
-        <div className="hm-roster">
-          {CLASSES.map((c, i) => (
-            <div className="hm-unit" key={c.name}>
-              <img src={c.art} alt="" />
-              <div style={{ flex: 1 }}>
-                <h3>{c.name.toUpperCase()}</h3>
-                <p>{c.desc}</p>
-              </div>
-              <span className="hm-rank">{String(i + 1).padStart(2, "0")}</span>
-            </div>
-          ))}
-        </div>
-      </Panel>
-
-      <Rule />
-
-      {/* ── List CTA ── */}
-      <section id="minolist" className="hm-band">
-        <div className="hm-wrap">
-          <span className="hm-tab">ACCESS</span>
-          <h2 className="hm-h2">JOIN {BRAND.list.toUpperCase()}</h2>
-          <p className="hm-p">
-            This is the only mint access phase. Clear the missions, submit your
-            wallet, and wait for selection. Selected wallets mint on {BRAND.venue}.
+      {/* ── Lore ── */}
+      <Panel tab={LORE.eyebrow.toUpperCase()}>
+        <h2 className="hm-h2">{LORE.title.toUpperCase()}</h2>
+        {LORE.body.map((p, i) => (
+          <p className="hm-p" key={i} style={{ margin: i === LORE.body.length - 1 ? 0 : "0 0 18px" }}>
+            {p}
           </p>
-          <button className="hm-btn" onClick={() => setModal(true)}>
-            CLAIM YOUR SPOT
-          </button>
-        </div>
-      </section>
-
-      <Rule />
-
-      {/* ── Mint ── */}
-      <Panel tab="THE MINT" id="mint">
-        <h2 className="hm-h2">ONE PHASE. ONE MINT.</h2>
-        <p className="hm-p">{BRAND.list} is the mint.</p>
-        <div className="hm-hud" style={{ margin: "0 0 24px", width: "100%" }}>
-          {HUD.map(([v, l]) => (
-            <div key={l}>
-              <b>{v}</b>
-              <span>{l}</span>
-            </div>
-          ))}
-        </div>
-        <a className="hm-btn" href={OPENSEA_URL} target="_blank" rel="noopener noreferrer" style={{ width: "100%" }}>
-          <img src="/OpenSea-Emblem.png" alt="" />
-          VIEW ON OPENSEA
-        </a>
+        ))}
       </Panel>
 
       <Rule />
 
-      {/* ── Reserve ── */}
-      <Panel tab="RESERVE">
-        <h2 className="hm-h2">THE WAR RESERVE</h2>
-        <p className="hm-p" style={{ margin: 0 }}>
-          A small allocation held back for collabs, rewards, partnerships, and
-          community support. Not a public mint phase.
+      {/* ── Vision ── */}
+      <Panel tab="THE VISION" id="vision">
+        <h2 className="hm-h2">WHAT WE'RE BUILDING TOWARD</h2>
+        <p className="hm-p">
+          None of this is live yet — this is the world the collection is being
+          built for.
         </p>
-      </Panel>
-
-      <Rule />
-
-      {/* ── Token (optional — skipped entirely if BRAND.token is null) ── */}
-      {BRAND.token && (
-        <>
-          <Panel tab="TOKEN">
-            <h2 className="hm-h2" style={{ fontSize: "clamp(1.6rem,8vw,3rem)" }}>
-              {BRAND.token}
-            </h2>
-            <p className="hm-p" style={{ margin: 0 }}>
-              The energy behind the world. Planned to power holder systems, games,
-              upgrades, raffles, burns, and events. Full details after mint.
-            </p>
-          </Panel>
-
-          <Rule />
-        </>
-      )}
-
-      {/* ── Systems ── */}
-      <Panel tab="SYSTEMS">
-        <h2 className="hm-h2">THE SYSTEMS</h2>
         <div className="hm-roster">
-          {SYSTEMS.map((s) => (
+          {VISION.map((s) => (
             <div className="hm-unit" key={s.name}>
               <div style={{ flex: 1 }}>
                 <h3>{s.name.toUpperCase()}</h3>
@@ -285,22 +146,39 @@ export default function Home() {
 
       <Rule />
 
-      {/* ── Roadmap: the only real sequence on the page ── */}
-      <Panel tab="QUEST LOG">
-        <h2 className="hm-h2">WHAT COMES AFTER MINT</h2>
+      {/* ── Path: an honest build status, not a hype countdown ── */}
+      <Panel tab="THE PATH" id="path">
+        <h2 className="hm-h2">WHERE THINGS STAND</h2>
         <div className="hm-log">
-          {ROADMAP.map((r) => (
-            <div className="hm-step" key={r.phase}>
+          {PATH.map((p) => (
+            <div className="hm-step" key={p.title}>
               <div className="hm-node" />
               <div>
-                <em>{r.phase.toUpperCase()}</em>
-                <h3>{r.title.toUpperCase()}</h3>
-                <p>{r.desc}</p>
+                <em>{p.stage.toUpperCase()}</em>
+                <h3>{p.title.toUpperCase()}</h3>
+                <p>{p.desc}</p>
               </div>
             </div>
           ))}
         </div>
       </Panel>
+
+      <Rule />
+
+      {/* ── Join CTA ── */}
+      <section className="hm-band">
+        <div className="hm-wrap">
+          <span className="hm-tab">EARLY ACCESS</span>
+          <h2 className="hm-h2">HEAR IT FIRST</h2>
+          <p className="hm-p">
+            No mint date yet, no supply, no price — just the first word when
+            the roster opens.
+          </p>
+          <button className="hm-btn" onClick={() => setModal(true)}>
+            JOIN THE LIST
+          </button>
+        </div>
+      </section>
 
       <Rule />
 
@@ -318,21 +196,18 @@ export default function Home() {
       <footer className="hm-foot">
         <img src={BRAND.logo} alt="" />
         <h3>{BRAND.name}</h3>
-        <p>
-          {BRAND.tagline}
-          <br />
-          {BRAND.supply} on {BRAND.chain}.{BRAND.token ? ` Powered by ${BRAND.token}.` : ""}
-        </p>
+        <p>{BRAND.tagline}</p>
         <div className="hm-links">
-          <a href={X_URL} target="_blank" rel="noopener noreferrer">X</a>
-          <a href={OPENSEA_URL} target="_blank" rel="noopener noreferrer">OPENSEA</a>
-          <a href="#minolist">LIST</a>
-          <a href="#mint">MINT</a>
+          {X_URL && (
+            <a href={X_URL} target="_blank" rel="noopener noreferrer">X</a>
+          )}
+          <a href="#vision">VISION</a>
+          <a href="#path">PATH</a>
         </div>
-        <p className="hm-sign">THE MINOVERSE OPENS SOON</p>
+        <p className="hm-sign">MORE SOON</p>
       </footer>
 
-      {modal && <QuestModal onClose={() => setModal(false)} />}
+      {modal && <WaitlistModal onClose={() => setModal(false)} />}
     </div>
   );
 }
