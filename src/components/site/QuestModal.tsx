@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { supabase } from "../../lib/supabase";
-import { PINNED_TWEET_URL } from "../../content";
+import { BRAND, PINNED_TWEET_URL, ROSTER_TABLE } from "../../content";
 
 const isEvm = (a: string) => /^0x[0-9a-fA-F]{40}$/.test(a.trim());
 const isUrl = (u: string) => {
@@ -86,7 +86,7 @@ export default function QuestModal({ onClose }: { onClose: () => void }) {
   /* Restore a half-finished application */
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("mn_v3");
+      const raw = localStorage.getItem("sw_roster_v1");
       if (raw) {
         const p = JSON.parse(raw);
         setHandle(p.twitter ?? "");
@@ -94,7 +94,7 @@ export default function QuestModal({ onClose }: { onClose: () => void }) {
         setQuote(p.quoteUrl ?? "");
         setLiked(!!p.liked);
       }
-      if (localStorage.getItem("mn_submitted") === "true") setAlready(true);
+      if (localStorage.getItem("sw_roster_submitted") === "true") setAlready(true);
     } catch {
       /* storage unavailable — the form still works, it just won't remember */
     }
@@ -103,7 +103,7 @@ export default function QuestModal({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     try {
       localStorage.setItem(
-        "mn_v3",
+        "sw_roster_v1",
         JSON.stringify({ twitter: handle, wallet, quoteUrl: quote, liked })
       );
     } catch {
@@ -130,7 +130,7 @@ export default function QuestModal({ onClose }: { onClose: () => void }) {
     if (!allDone || already) return;
     setErr("");
     setSending(true);
-    const { error } = await supabase.from("minions").insert([
+    const { error } = await supabase.from(ROSTER_TABLE).insert([
       {
         wallet: wallet.trim(),
         twitter: handle.trim(),
@@ -145,7 +145,7 @@ export default function QuestModal({ onClose }: { onClose: () => void }) {
     setSent(true);
     setAlready(true);
     try {
-      localStorage.setItem("mn_submitted", "true");
+      localStorage.setItem("sw_roster_submitted", "true");
     } catch {
       /* ignore */
     }
@@ -153,7 +153,7 @@ export default function QuestModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="hm-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="hm-modal" role="dialog" aria-modal="true" aria-label="MinoList application">
+      <div className="hm-modal" role="dialog" aria-modal="true" aria-label={`${BRAND.list} application`}>
         <button className="hm-close" onClick={onClose} aria-label="Close">
           ✕
         </button>
@@ -175,7 +175,7 @@ export default function QuestModal({ onClose }: { onClose: () => void }) {
               className="hm-mono"
               style={{ fontSize: ".52rem", letterSpacing: ".2em", color: "#7fa6bd", fontStyle: "normal" }}
             >
-              MINOLIST APPLICATION
+              {BRAND.list.toUpperCase()} APPLICATION
             </em>
             <h2 style={{ marginTop: 10 }}>CLAIM YOUR SPOT</h2>
             <p style={{ margin: 0, color: "rgba(239,230,210,.65)", fontSize: "1.15rem" }}>
@@ -242,7 +242,7 @@ export default function QuestModal({ onClose }: { onClose: () => void }) {
                   <p className="hm-ok">Quote verified</p>
                 ) : (
                   <>
-                    <p>Quote the pinned post with "MINIONS", tag 2 friends, paste the link.</p>
+                    <p>Quote the pinned post with "{BRAND.name}", tag 2 friends, paste the link.</p>
                     <input
                       className="hm-in"
                       placeholder="https://x.com/..."
@@ -291,7 +291,7 @@ export default function QuestModal({ onClose }: { onClose: () => void }) {
             {err && <p className="hm-err">{err}</p>}
 
             <button className="hm-btn hm-submit" onClick={submit} disabled={!allDone || sending}>
-              {sending ? "SENDING..." : allDone ? "JOIN THE MINOLIST" : "CLEAR ALL 4 MISSIONS"}
+              {sending ? "SENDING..." : allDone ? `JOIN ${BRAND.list.toUpperCase()}` : "CLEAR ALL 4 MISSIONS"}
             </button>
           </>
         )}
