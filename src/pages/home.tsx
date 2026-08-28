@@ -242,7 +242,7 @@ export default function Home() {
 
       {/* ── Reserve ── */}
       <Panel tab="RESERVE">
-        <h2 className="hm-h2">THE MINO RESERVE</h2>
+        <h2 className="hm-h2">THE WAR RESERVE</h2>
         <p className="hm-p" style={{ margin: 0 }}>
           A small allocation held back for collabs, rewards, partnerships, and
           community support. Not a public mint phase.
@@ -251,18 +251,22 @@ export default function Home() {
 
       <Rule />
 
-      {/* ── Token ── */}
-      <Panel tab="TOKEN">
-        <h2 className="hm-h2" style={{ fontSize: "clamp(1.6rem,8vw,3rem)" }}>
-          {BRAND.token}
-        </h2>
-        <p className="hm-p" style={{ margin: 0 }}>
-          The energy behind the world. Planned to power holder systems, games,
-          upgrades, raffles, burns, and events. Full details after mint.
-        </p>
-      </Panel>
+      {/* ── Token (optional — skipped entirely if BRAND.token is null) ── */}
+      {BRAND.token && (
+        <>
+          <Panel tab="TOKEN">
+            <h2 className="hm-h2" style={{ fontSize: "clamp(1.6rem,8vw,3rem)" }}>
+              {BRAND.token}
+            </h2>
+            <p className="hm-p" style={{ margin: 0 }}>
+              The energy behind the world. Planned to power holder systems, games,
+              upgrades, raffles, burns, and events. Full details after mint.
+            </p>
+          </Panel>
 
-      <Rule />
+          <Rule />
+        </>
+      )}
 
       {/* ── Systems ── */}
       <Panel tab="SYSTEMS">
@@ -317,7 +321,7 @@ export default function Home() {
         <p>
           {BRAND.tagline}
           <br />
-          {BRAND.supply} on {BRAND.chain}. Powered by {BRAND.token}.
+          {BRAND.supply} on {BRAND.chain}.{BRAND.token ? ` Powered by ${BRAND.token}.` : ""}
         </p>
         <div className="hm-links">
           <a href={X_URL} target="_blank" rel="noopener noreferrer">X</a>
