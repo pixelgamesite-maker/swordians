@@ -58,18 +58,22 @@ export default function Landing({ onAccept }: { onAccept?: () => void }) {
     const el = audio.current;
     if (el) {
       el.volume = 0;
-      el.play().then(() => ramp(0.55, 1600)).catch(() => {});
+      el.play()
+        .then(() => ramp(0.55, 1600))
+        .catch((e) => console.warn("Intro audio blocked:", e));
     }
   }, [phase, ramp]);
 
-  /* Press any key to start — the only correct way to open a game */
+  /* Press any key or tap to start — the only correct way to open a game.
+     "click" (not "pointerdown"/"touchstart") is what iOS Safari actually
+     honors as a valid gesture for starting audio playback. */
   useEffect(() => {
     if (phase !== "boot") return;
     window.addEventListener("keydown", start);
-    window.addEventListener("pointerdown", start);
+    window.addEventListener("click", start);
     return () => {
       window.removeEventListener("keydown", start);
-      window.removeEventListener("pointerdown", start);
+      window.removeEventListener("click", start);
     };
   }, [phase, start]);
 
