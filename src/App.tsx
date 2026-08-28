@@ -1,7 +1,13 @@
-import { Router as WouterRouter, Route, Switch } from "wouter";
+import { Router as WouterRouter, Route, Switch, useLocation } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import Landing from "@/pages/landing";
 import Home from "@/pages/home";
+
+function LandingRoute() {
+  const [, navigate] = useLocation();
+  return <Landing onAccept={() => navigate("/home")} />;
+}
 
 function App() {
   return (
@@ -9,7 +15,8 @@ function App() {
       <TooltipProvider>
         <WouterRouter>
           <Switch>
-            <Route path="/" component={Home} />
+            <Route path="/" component={LandingRoute} />
+            <Route path="/home" component={Home} />
             <Route>
               <div
                 style={{
