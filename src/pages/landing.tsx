@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import CRTFrame from "./components/retro/CRTFrame";
-import DialogueBox, { type Choice } from "./components/retro/DialogueBox";
-import { FONT_LINK, RETRO_CSS } from "./components/retro/theme";
+import CRTFrame from "../components/retro/CRTFrame";
+import DialogueBox, { type Choice } from "../components/retro/DialogueBox";
+import { FONT_LINK, RETRO_CSS } from "../components/retro/theme";
 
 /* ── Assets in /public ── */
 const PLATE = "/landing.png";
@@ -25,7 +25,7 @@ export default function Landing({ onAccept }: { onAccept?: () => void }) {
   const [shake, setShake] = useState(false);
   const [muted, setMuted] = useState(false);
   const audio = useRef<HTMLAudioElement>(null);
-  const fadeId = useRef<number>();
+  const fadeId = useRef<number | undefined>(undefined);
 
   /* Fonts + stylesheet */
   useEffect(() => {
