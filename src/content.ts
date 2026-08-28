@@ -1,81 +1,60 @@
 /* ═══════════════════════════════════════════════════════════
-   Every word on the site lives here. This is the only file
-   you should need to touch to change copy, numbers, or links.
+   Every word on the site lives here.
 
-   ⚠️ Anything wrapped in <> below is a placeholder — swap in
-   the real number/link before shipping. Nothing here should
-   guess at facts about your actual collection.
+   This is a PRE-ANNOUNCE pitch page — no supply, price, chain,
+   or mint date are confirmed yet, so none are invented here.
+   What you see is either true today ("in development") or a
+   stated intention ("planned"), never a fabricated stat.
    ═══════════════════════════════════════════════════════════ */
 
 export const BRAND = {
   name: "SWORDIANS",
-  token: "$SWORD",              // ← set to null if there's no token yet
-  list: "The Roster",           // whitelist / access-list phase name
-  tagline: "Chosen by the blade, not the crowd.",
-  supply: "<SUPPLY>",           // e.g. "10,000"
-  price: "<MINT PRICE>",        // e.g. "0.01 ETH"
-  chain: "<CHAIN>",             // e.g. "Ethereum"
-  venue: "<LAUNCHPAD>",         // e.g. "OpenSea"
-  logo: "/logo.jpg",
+  tagline: "An order of blades, chosen one quest at a time.",
+  logo: "/mini-logo.jpg", // only logo asset in /public right now — rename the file whenever there's a proper one
 };
 
-export const X_URL = "<X_URL>";                 // e.g. https://x.com/swordians
-export const PINNED_TWEET_URL = "<PINNED_TWEET_URL>";
-export const MINT_URL = "<MINT_URL>";            // OpenSea / mint page link
+/* Not live yet — client hasn't created the account. Leave as "" to hide the header icon. */
+export const X_URL = "";
 
-export const HUD: [string, string][] = [
-  [BRAND.supply, "Supply"],
-  [BRAND.price, "Mint price"],
-  [BRAND.chain, "Chain"],
-  [BRAND.venue, "Launchpad"],
+/** Supabase table the waitlist form writes to.
+ *  Needs columns: email (text), handle (text, nullable). */
+export const WAITLIST_TABLE = "<SUPABASE_TABLE_NAME>";
+
+/* Honest status strip for the hero — no numbers we don't have yet. */
+export const STATUS: [string, string][] = [
+  ["In development", "Status"],
+  ["Pixel, hand-drawn", "Art style"],
+  ["TBA", "Chain"],
 ];
 
-export const GALLERY = [
-  // Add the character art you want cycling through the hero gallery.
-  "/Character-1.jpg",
-  "/Character-2.jpg",
-  "/Character-3.jpg",
-];
+export const LORE = {
+  eyebrow: "Before the mint",
+  title: "The order is forming",
+  body: [
+    "Every Swordian starts the same way: chosen, not applied for. The blade picks its bearer, and the bearer answers.",
+    "The collection is still being drawn — every character, every class, every scar earned in the field. What's here is the world they're being built for.",
+  ],
+};
 
-export const CLASSES = [
-  { name: "Recruits", desc: "Fresh to the order. Simple gear, clear eyes.", art: "/Character-1.jpg" },
-  { name: "Veterans", desc: "Scarred, sharper, and impossible to miss.", art: "/Character-2.jpg" },
-  { name: "Elites", desc: "Loud loadouts and battlefield rarity.", art: "/Character-3.jpg" },
-  { name: "Commanders", desc: "Harder to find. Easier to notice.", art: "/Character-1.jpg" },
-  { name: "Originals", desc: "The founding blades. Deepest tie to the order.", art: "/Character-2.jpg" },
-];
-
-export const TRAITS = [
-  "Headgear", "Armor", "Weapons", "Expressions",
-  "Colors", "Scars & marks", "Backgrounds", "Rare details",
-];
-
-export const SYSTEMS = [
-  { name: "The Forge", desc: "Upgrade and customize your Swordian." },
-  { name: "The Arena", desc: "Battles, leaderboards, and rewards." },
+export const VISION = [
+  { name: "The Forge", desc: "Upgrade and customize your Swordian after mint." },
+  { name: "The Arena", desc: "Battles, leaderboards, and rewards for holders." },
   { name: "The Camp", desc: "Holder games, raffles, and community missions." },
-  { name: "The War Chest", desc: `Spend ${BRAND.token ?? "the token"} on drops, rerolls, and rewards.` },
+  { name: "The War Chest", desc: "A token-powered layer for drops and rewards, once it's ready to announce." },
 ];
 
-export const ROADMAP = [
-  { phase: "Phase I", title: `${BRAND.list} opens`, desc: "Applications and early access review begin." },
-  { phase: "Phase II", title: "Mint opens", desc: `Selected wallets mint on ${BRAND.venue}.` },
-  { phase: "Phase III", title: "Reveal", desc: "Traits, classes, and rarity go live." },
-  { phase: "Phase IV", title: `${BRAND.token ?? "Token"} details`, desc: "Full mechanics shared after mint." },
-  { phase: "Phase V", title: "The systems begin", desc: "The Forge, Arena, Camp, and War Chest open." },
+/* Honest build stages, not a marketing countdown. */
+export const PATH = [
+  { stage: "Now", title: "Lore & world", desc: "The Order, the setting, and the tone are locked." },
+  { stage: "In progress", title: "Collection art", desc: "Characters, traits, and classes are being illustrated." },
+  { stage: "Next", title: "Roster opens", desc: "Early access list opens once the art is ready to show." },
+  { stage: "Later", title: "Mint details", desc: "Supply, price, and chain are announced closer to launch." },
+  { stage: "After mint", title: "Systems go live", desc: "The Forge, Arena, Camp, and War Chest open to holders." },
 ];
 
 export const FAQS = [
-  { q: `What is ${BRAND.name}?`, a: `A ${BRAND.supply} supply pixel character collection on ${BRAND.chain}.` },
-  { q: "What is the mint price?", a: BRAND.price },
-  { q: "Where is the mint?", a: BRAND.venue },
-  { q: `What is ${BRAND.list}?`, a: "The access phase before mint." },
-  { q: "Is there a public mint?", a: "Only if wallets are left over after the Roster." },
-  ...(BRAND.token
-    ? [
-        { q: `What is ${BRAND.token}?`, a: "The token planned to power the systems after mint." },
-        { q: `When do ${BRAND.token} details drop?`, a: "After mint." },
-      ]
-    : []),
-  { q: "Is this financial advice?", a: "No. This is a digital collectible. Do your own research." },
+  { q: `What is ${BRAND.name}?`, a: "A pixel-art character collection, still in development." },
+  { q: "When does it mint?", a: "Not yet announced — join the list to hear first." },
+  { q: "What do I get for joining the list?", a: "Early word when the roster and mint details open. Nothing else is promised yet." },
+  { q: "Is this financial advice?", a: "No. This will be a digital collectible. Do your own research." },
 ];
