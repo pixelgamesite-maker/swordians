@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import WaitlistModal from "./components/site/WaitlistModal";
-import { FONT_LINK, HOME_CSS } from "./components/retro/theme";
-import { BRAND, FAQS, LORE, PATH, STATUS, VISION, X_URL } from "./content";
+import WaitlistModal from "../components/site/WaitlistModal";
+import { FONT_LINK, HOME_CSS } from "../components/retro/theme";
+import { BRAND, FAQS, LORE, PATH, STATUS, VISION, X_URL } from "../content";
 
 /* ── Reveal a panel once it scrolls into view ── */
 function Panel({
