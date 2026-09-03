@@ -8,7 +8,7 @@
    ═══════════════════════════════════════════════════════════ */
 
 export const BRAND = {
-  name: "SWORDIANS",
+  name: "SWOLDIERS",
   tagline: "An order of blades, chosen one quest at a time.",
   logo: "/mini-logo.jpg", // only logo asset in /public right now — rename the file whenever there's a proper one
 };
@@ -31,13 +31,13 @@ export const LORE = {
   eyebrow: "Before the mint",
   title: "The order is forming",
   body: [
-    "Every Swordian starts the same way: chosen, not applied for. The blade picks its bearer, and the bearer answers.",
+    "Every Swoldier starts the same way: chosen, not applied for. The blade picks its bearer, and the bearer answers.",
     "The collection is still being drawn — every character, every class, every scar earned in the field. What's here is the world they're being built for.",
   ],
 };
 
 export const VISION = [
-  { name: "The Forge", desc: "Upgrade and customize your Swordian after mint." },
+  { name: "The Forge", desc: "Upgrade and customize your Swoldier after mint." },
   { name: "The Arena", desc: "Battles, leaderboards, and rewards for holders." },
   { name: "The Camp", desc: "Holder games, raffles, and community missions." },
   { name: "The War Chest", desc: "A token-powered layer for drops and rewards, once it's ready to announce." },
