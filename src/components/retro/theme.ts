@@ -167,6 +167,18 @@ export const RETRO_CSS = `
   background:var(--ink); opacity:0; animation:sw-fade .75s ease-in .32s forwards;
 }
 
+/* ── Connecting to X ─────────────────────────────────────── */
+.sw-connect{
+  position:absolute; inset:0; z-index:45; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:14px; text-align:center;
+  background:rgba(7,10,14,.94);
+}
+.sw-connect p{
+  font-family:${display}; font-size:clamp(.7rem,3.4vw,1rem); color:var(--gold);
+  margin:0; animation:sw-blink 1s steps(1) infinite;
+}
+.sw-connect small{ font-size:1.1rem; letter-spacing:.26em; color:var(--steel); }
+
 /* ── Keyframes ──────────────────────────────────────────── */
 @keyframes sw-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
 @keyframes sw-drift{from{transform:scale(1.04) translate3d(0,0,0)}to{transform:scale(1.11) translate3d(-1.5%,-1%,0)}}
