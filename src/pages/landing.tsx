@@ -2,10 +2,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import CRTFrame from "../components/retro/CRTFrame";
 import DialogueBox, { type Choice } from "../components/retro/DialogueBox";
 import { FONT_LINK, RETRO_CSS } from "../components/retro/theme";
+import { useAudio } from "../audio/AudioProvider";
+import { signInWithX } from "../hooks/useSession";
 
 /* ── Assets in /public ── */
 const PLATE = "/landing.png";
-const THEME = "/intro.mp3";
 
 const SPEAKER = "The Swoldier Order";
 const OPENING = "YOU HAVE BEEN CHOSEN. ACCEPT QUEST?";
@@ -17,15 +18,15 @@ const REFUSALS = [
   "NO IS NO LONGER ON THE TABLE, WANDERER.",
 ];
 
-type Phase = "boot" | "quest" | "accepted";
+type Phase = "boot" | "quest" | "accepted" | "connecting";
 
-export default function Landing({ onAccept }: { onAccept?: () => void }) {
+export default function Landing() {
   const [phase, setPhase] = useState<Phase>("boot");
   const [refusals, setRefusals] = useState(0);
   const [shake, setShake] = useState(false);
-  const [muted, setMuted] = useState(false);
-  const audio = useRef<HTMLAudioElement>(null);
-  const fadeId = useRef<number | undefined>(undefined);
+  const [err, setErr] = useState("");
+  const { muted, start: startMusic, toggleMute } = useAudio();
+  const acted = useRef(false);
 
   /* Fonts + stylesheet */
   useEffect(() => {
@@ -38,35 +39,13 @@ export default function Landing({ onAccept }: { onAccept?: () => void }) {
     };
   }, []);
 
-  /* Volume ramp, so the theme swells in instead of slapping you */
-  const ramp = useCallback((to: number, ms: number) => {
-    const el = audio.current;
-    if (!el) return;
-    window.clearInterval(fadeId.current);
-    const from = el.volume;
-    const started = performance.now();
-    fadeId.current = window.setInterval(() => {
-      const t = Math.min(1, (performance.now() - started) / ms);
-      el.volume = Math.max(0, Math.min(1, from + (to - from) * t));
-      if (t === 1) window.clearInterval(fadeId.current);
-    }, 40);
-  }, []);
-
   const start = useCallback(() => {
     if (phase !== "boot") return;
     setPhase("quest");
-    const el = audio.current;
-    if (el) {
-      el.volume = 0;
-      el.play()
-        .then(() => ramp(0.55, 1600))
-        .catch((e) => console.warn("Intro audio blocked:", e));
-    }
-  }, [phase, ramp]);
+    startMusic();
+  }, [phase, startMusic]);
 
-  /* Press any key or tap to start — the only correct way to open a game.
-     "click" (not "pointerdown"/"touchstart") is what iOS Safari actually
-     honors as a valid gesture for starting audio playback. */
+  /* Press any key or tap to start. "click" is what iOS honours for audio. */
   useEffect(() => {
     if (phase !== "boot") return;
     window.addEventListener("keydown", start);
@@ -77,27 +56,29 @@ export default function Landing({ onAccept }: { onAccept?: () => void }) {
     };
   }, [phase, start]);
 
-  useEffect(() => () => window.clearInterval(fadeId.current), []);
-
-  function choose(kind: Choice["kind"]) {
+  async function choose(kind: Choice["kind"]) {
     if (kind === "no") {
       setRefusals((n) => Math.min(n + 1, REFUSALS.length));
       setShake(true);
       window.setTimeout(() => setShake(false), 400);
       return;
     }
+    if (acted.current) return;
+    acted.current = true;
     setPhase("accepted");
-    ramp(0, 900);
-    window.setTimeout(
-      () => (onAccept ? onAccept() : window.location.assign("/home")),
-      1150
-    );
-  }
 
-  function toggleSound() {
-    const next = !muted;
-    setMuted(next);
-    if (audio.current) audio.current.muted = next;
+    /* Let the sword stroke play, then hand off to X for auth. */
+    window.setTimeout(async () => {
+      setPhase("connecting");
+      try {
+        await signInWithX("/hub");
+      } catch (e) {
+        console.error(e);
+        setErr("COULD NOT REACH X. TAP TO RETRY.");
+        acted.current = false;
+        setPhase("quest");
+      }
+    }, 1000);
   }
 
   const line = refusals === 0 ? OPENING : REFUSALS[refusals - 1];
@@ -111,10 +92,8 @@ export default function Landing({ onAccept }: { onAccept?: () => void }) {
       <style>{RETRO_CSS}</style>
 
       <CRTFrame image={PLATE}>
-        <audio ref={audio} src={THEME} loop preload="auto" />
-
         {phase !== "boot" && (
-          <button className="sw-sound" onClick={toggleSound}>
+          <button className="sw-sound" onClick={toggleMute}>
             {muted ? "SOUND OFF" : "SOUND ON"}
           </button>
         )}
@@ -130,6 +109,7 @@ export default function Landing({ onAccept }: { onAccept?: () => void }) {
             ▶ PRESS START
           </button>
           <p className="sw-legal">Headphones recommended</p>
+          {err && <p className="sw-legal" style={{ color: "#e0776e" }}>{err}</p>}
         </div>
 
         {/* Quest prompt */}
@@ -142,6 +122,13 @@ export default function Landing({ onAccept }: { onAccept?: () => void }) {
             shake={shake}
             onChoose={choose}
           />
+        )}
+
+        {phase === "connecting" && (
+          <div className="sw-connect">
+            <p>OPENING THE GATE...</p>
+            <small>REDIRECTING TO X</small>
+          </div>
         )}
 
         {/* Accepted: one clean sword stroke, then black */}
