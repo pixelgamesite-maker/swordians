@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   SWORDIANS — retro design tokens
+   SWOLDIERS — retro design tokens
    Palette pulled straight from the pixel art:
    the beret-green field, the navy card background, the gold pin.
    ═══════════════════════════════════════════════════════════ */
