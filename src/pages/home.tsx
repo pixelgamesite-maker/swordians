@@ -86,8 +86,8 @@ export default function Home() {
       <div className="hm-hero" id="top">
         <span className="hm-badge">UNANNOUNCED · PRE-MINT</span>
         <h1 className="hm-title">
-          {BRAND.name.slice(0, 5)}
-          <b>{BRAND.name.slice(5)}</b>
+          {BRAND.name.slice(0, 4)}
+          <b>{BRAND.name.slice(4)}</b>
         </h1>
         <div className="hm-rule" />
         <p className="hm-tag">{BRAND.tagline}</p>
