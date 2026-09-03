@@ -7,7 +7,7 @@ import { FONT_LINK, RETRO_CSS } from "../components/retro/theme";
 const PLATE = "/landing.png";
 const THEME = "/intro.mp3";
 
-const SPEAKER = "The Swordian Order";
+const SPEAKER = "The Swoldier Order";
 const OPENING = "YOU HAVE BEEN CHOSEN. ACCEPT QUEST?";
 
 /* The Order does not take no for an answer. */
@@ -123,7 +123,7 @@ export default function Landing({ onAccept }: { onAccept?: () => void }) {
         <div className="sw-curtain" data-open={phase === "boot"}>
           <p className="sw-kicker">A quest begins</p>
           <h1 className="sw-title">
-            SWORD<b>IANS</b>
+            SWOL<b>DIERS</b>
           </h1>
           <div className="sw-blade" />
           <button className="sw-start" onClick={start}>
