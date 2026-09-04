@@ -1,15 +1,14 @@
 import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { supabase } from "../lib/supabase";
-import { useSession } from "../hooks/useSession";
+import { useAuth } from "../hooks/useAuth";
 import Gallery from "../components/game/Gallery";
 import { APP_CSS } from "../components/retro/appTheme";
 import { FONT_LINK } from "../components/retro/theme";
-import { RUNS_TABLE } from "../content";
 
 export default function Play() {
   const [, go] = useLocation();
-  const { session, loading } = useSession();
+  const { session, loading } = useAuth();
 
   useEffect(() => {
     const l = document.createElement("link");
@@ -22,16 +21,18 @@ export default function Play() {
     if (!loading && !session) go("/");
   }, [loading, session, go]);
 
+  /* Writes go through record_run() in Postgres, not a direct table
+     insert — the function ignores whatever we claim for "qualified"
+     and recomputes it server-side, so there's nothing to fake here. */
   async function record(r: { score: number; qualified: boolean; civilians: number; seconds: number }) {
     if (!session) return;
-    await supabase.from(RUNS_TABLE).insert([{
-      x_id: session.user.id,
-      handle: session.user.user_metadata?.user_name ?? null,
-      score: r.score,
-      qualified: r.qualified,
-      civilians: r.civilians,
-      seconds: r.seconds,
-    }]).then(undefined, () => { /* table may not exist yet */ });
+    const { error } = await supabase.rpc("record_run", {
+      p_score: r.score,
+      p_civilians: r.civilians,
+      p_seconds: r.seconds,
+      p_handle: session.user.user_metadata?.user_name ?? null,
+    });
+    if (error) console.error("record_run failed:", error.message);
   }
 
   return (
