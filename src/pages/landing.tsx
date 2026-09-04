@@ -3,7 +3,7 @@ import CRTFrame from "../components/retro/CRTFrame";
 import DialogueBox, { type Choice } from "../components/retro/DialogueBox";
 import { FONT_LINK, RETRO_CSS } from "../components/retro/theme";
 import { useAudio } from "../audio/AudioProvider";
-import { signInWithX } from "../hooks/useSession";
+import { signInWithX } from "../hooks/useAuth";
 
 /* ── Assets in /public ── */
 const PLATE = "/landing.png";
@@ -71,7 +71,7 @@ export default function Landing() {
     window.setTimeout(async () => {
       setPhase("connecting");
       try {
-        await signInWithX("/hub");
+        await signInWithX("/auth/callback");
       } catch (e) {
         console.error(e);
         setErr("COULD NOT REACH X. TAP TO RETRY.");
