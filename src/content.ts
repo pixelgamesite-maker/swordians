@@ -1,60 +1,44 @@
 /* ═══════════════════════════════════════════════════════════
-   Every word on the site lives here.
-
-   This is a PRE-ANNOUNCE pitch page — no supply, price, chain,
-   or mint date are confirmed yet, so none are invented here.
-   What you see is either true today ("in development") or a
-   stated intention ("planned"), never a fabricated stat.
+   All copy, tuning numbers and links in one place.
+   <PLACEHOLDER> values must be filled before going live.
    ═══════════════════════════════════════════════════════════ */
 
 export const BRAND = {
   name: "SWOLDIERS",
-  tagline: "An order of blades, chosen one quest at a time.",
-  logo: "/mini-logo.jpg", // only logo asset in /public right now — rename the file whenever there's a proper one
+  tagline: "Chosen by the blade, not the crowd.",
+  logo: "/mini-logo.jpg",
 };
 
-/* Not live yet — client hasn't created the account. Leave as "" to hide the header icon. */
-export const X_URL = "";
+export const X_URL = "";                      // no account yet — header icon hides while empty
+export const PINNED_TWEET_URL = "";
 
-/** Supabase table the waitlist form writes to.
- *  Needs columns: email (text), handle (text, nullable). */
-export const WAITLIST_TABLE = "<SUPABASE_TABLE_NAME>";
+/* Supabase tables — created by supabase/schema.sql */
+export const RUNS_TABLE = "game_runs";    // x_id, handle, score, qualified, civilians, seconds
+export const TASKS_TABLE = "social_tasks"; // x_id, task_id, completed_at
 
-/* Honest status strip for the hero — no numbers we don't have yet. */
-export const STATUS: [string, string][] = [
-  ["In development", "Status"],
-  ["Pixel, hand-drawn", "Art style"],
-  ["TBA", "Chain"],
-];
-
-export const LORE = {
-  eyebrow: "Before the mint",
-  title: "The order is forming",
-  body: [
-    "Every Swoldier starts the same way: chosen, not applied for. The blade picks its bearer, and the bearer answers.",
-    "The collection is still being drawn — every character, every class, every scar earned in the field. What's here is the world they're being built for.",
-  ],
+/* ── Scoring ──────────────────────────────────────────────
+   We never settled on exact numbers, so these are a starting
+   point tuned so a decent run lands around 2,500–4,000.
+   Play it and move them; nothing else needs changing.        */
+export const SCORING = {
+  enemyHit: 100,
+  comboStep: 25,        // added per consecutive enemy
+  comboCap: 200,        // max combo bonus per hit
+  civilianHit: -150,
+  maxCivilians: 5,      // this many and the run ends
+  qualifyingScore: 2500,
 };
 
-export const VISION = [
-  { name: "The Forge", desc: "Upgrade and customize your Swoldier after mint." },
-  { name: "The Arena", desc: "Battles, leaderboards, and rewards for holders." },
-  { name: "The Camp", desc: "Holder games, raffles, and community missions." },
-  { name: "The War Chest", desc: "A token-powered layer for drops and rewards, once it's ready to announce." },
+/* Points awarded for social tasks. */
+export const TASK_POINTS = 250;
+
+export const TASKS = [
+  { id: "follow", label: "Follow on X", desc: "Follow the account to stay in the loop.", url: X_URL },
+  { id: "like", label: "Like the pinned post", desc: "Show the announcement some love.", url: PINNED_TWEET_URL },
+  { id: "repost", label: "Repost the pinned post", desc: "Put it in front of your followers.", url: PINNED_TWEET_URL },
+  { id: "tag", label: "Tag 2 friends", desc: "Drop two mutuals in the replies.", url: PINNED_TWEET_URL },
 ];
 
-/* Honest build stages, not a marketing countdown. */
-export const PATH = [
-  { stage: "Now", title: "Lore & world", desc: "The Order, the setting, and the tone are locked." },
-  { stage: "In progress", title: "Collection art", desc: "Characters, traits, and classes are being illustrated." },
-  { stage: "Next", title: "Roster opens", desc: "Early access list opens once the art is ready to show." },
-  { stage: "Later", title: "Mint details", desc: "Supply, price, and chain are announced closer to launch." },
-  { stage: "After mint", title: "Systems go live", desc: "The Forge, Arena, Camp, and War Chest open to holders." },
-];
-
-export const FAQS = [
-  { q: `What is ${BRAND.name}?`, a: "A pixel-art character collection, still in development." },
-  { q: "When does it mint?", a: "Not yet announced — join the list to hear first." },
-  { q: "What do I get for joining the list?", a: "Early word when the roster and mint details open. Nothing else is promised yet." },
-  { q: "Is this financial advice?", a: "No. This will be a digital collectible. Do your own research." },
-];
+export const SPOTS = {
+  total: 1500,          // hard cap on guaranteed spots
+};
