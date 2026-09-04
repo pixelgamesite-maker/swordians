@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { supabase } from "../lib/supabase";
-import { useSession } from "../hooks/useSession";
+import { useAuth } from "../hooks/useAuth";
 import { APP_CSS } from "../components/retro/appTheme";
 import { FONT_LINK } from "../components/retro/theme";
 import { TASKS, TASKS_TABLE, TASK_POINTS } from "../content";
 
 export default function Tasks() {
   const [, go] = useLocation();
-  const { session, loading } = useSession();
+  const { session, loading } = useAuth();
   const [done, setDone] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -29,13 +29,18 @@ export default function Tasks() {
       .catch(() => { /* table may not exist yet */ });
   }, [session]);
 
+  /* Claiming goes through claim_task() in Postgres, which also
+     rejects any task id not on its own fixed allow-list — so this
+     can't be used to insert fake task rows for points. */
   async function claim(id: string, url: string) {
     if (!session || done.has(id)) return;
     if (url) window.open(url, "_blank", "noopener");
-    setDone((s) => new Set(s).add(id));
-    await supabase.from(TASKS_TABLE)
-      .insert([{ x_id: session.user.id, task_id: id }])
-      .then(undefined, () => { /* ignore duplicate/missing table */ });
+    const { data, error } = await supabase.rpc("claim_task", { p_task_id: id });
+    if (error) {
+      console.error("claim_task failed:", error.message);
+      return;
+    }
+    if (data) setDone((s) => new Set(s).add(id));
   }
 
   const earned = done.size * TASK_POINTS;
