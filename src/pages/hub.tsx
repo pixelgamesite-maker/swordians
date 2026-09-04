@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { supabase } from "../lib/supabase";
-import { useSession, handleFrom, signOut } from "../hooks/useSession";
+import { useAuth, handleFrom, signOut } from "../hooks/useAuth";
 import { useAudio } from "../audio/AudioProvider";
 import { APP_CSS } from "../components/retro/appTheme";
 import { FONT_LINK } from "../components/retro/theme";
@@ -9,7 +9,7 @@ import { BRAND, RUNS_TABLE, TASKS_TABLE, TASK_POINTS } from "../content";
 
 export default function Hub() {
   const [, go] = useLocation();
-  const { session, loading } = useSession();
+  const { session, loading } = useAuth();
   const { muted, toggleMute } = useAudio();
   const [best, setBest] = useState<number | null>(null);
   const [taskPoints, setTaskPoints] = useState(0);
