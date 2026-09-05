@@ -5,6 +5,7 @@ import { AudioProvider } from "@/audio/AudioProvider";
 import Landing from "@/pages/landing";
 import Callback from "@/pages/Auth/callback";
 import Hub from "@/pages/hub";
+import Leaderboard from "@/pages/leaderboard";
 import Tasks from "@/pages/tasks";
 import Play from "@/pages/play";
 
@@ -19,6 +20,7 @@ function App() {
               <Route path="/" component={Landing} />
               <Route path="/auth/callback" component={Callback} />
               <Route path="/hub" component={Hub} />
+              <Route path="/leaderboard" component={Leaderboard} />
               <Route path="/tasks" component={Tasks} />
               <Route path="/play" component={Play} />
               <Route>
