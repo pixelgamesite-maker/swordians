@@ -90,3 +90,17 @@ export const APP_CSS = `
 .ap-spinner{ font-family:${display}; font-size:.6rem; color:#7fa6bd; animation:ap-blink 1s steps(1) infinite; }
 @keyframes ap-blink{ 0%,55%{opacity:1} 56%,100%{opacity:.25} }
 `;
+
+export const LEADERBOARD_CSS = `
+.lb-row{
+  display:grid; grid-template-columns:38px 32px 1fr auto; align-items:center; gap:12px;
+  padding:12px 10px; border-bottom:2px solid rgba(127,166,189,.18);
+}
+.lb-row[data-me="true"]{ background:rgba(240,180,41,.1); border-color:#f0b429; }
+.lb-rank{ font-family:'Press Start 2P',monospace; font-size:.6rem; color:#7fa6bd; }
+.lb-row[data-me="true"] .lb-rank{ color:#f0b429; }
+.lb-avatar{ width:32px; height:32px; border-radius:50%; border:2px solid rgba(127,166,189,.4); object-fit:cover; }
+.lb-avatar-fallback{ width:32px; height:32px; border-radius:50%; background:rgba(127,166,189,.2); }
+.lb-handle{ font-size:1.1rem; color:#efe6d2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.lb-pts{ font-family:'Press Start 2P',monospace; font-size:.62rem; color:#f0b429; }
+`;
