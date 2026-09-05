@@ -5,14 +5,13 @@ import { useAuth, handleFrom, signOut } from "../hooks/useAuth";
 import { useAudio } from "../audio/AudioProvider";
 import { APP_CSS } from "../components/retro/appTheme";
 import { FONT_LINK } from "../components/retro/theme";
-import { BRAND, RUNS_TABLE, TASKS_TABLE, TASK_POINTS } from "../content";
+import { BRAND, LEADERBOARD_TABLE } from "../content";
 
 export default function Hub() {
   const [, go] = useLocation();
   const { session, loading } = useAuth();
   const { muted, toggleMute } = useAudio();
-  const [best, setBest] = useState<number | null>(null);
-  const [taskPoints, setTaskPoints] = useState(0);
+  const [total, setTotal] = useState<number | null>(null);
 
   useEffect(() => {
     const l = document.createElement("link");
@@ -21,23 +20,18 @@ export default function Hub() {
     return () => l.remove();
   }, []);
 
-  /* Not signed in? Back to the gate. */
   useEffect(() => {
     if (!loading && !session) go("/");
   }, [loading, session, go]);
 
-  /* Pull the player's best run + completed tasks */
+  /* The leaderboard row IS the running total — every run and every
+     task's points land on it via record_run()/claim_task(), so this
+     is a single read instead of summing two tables client-side. */
   useEffect(() => {
     if (!session) return;
-    const uid = session.user.id;
-    (async () => {
-      const [{ data: runs }, { data: tasks }] = await Promise.all([
-        supabase.from(RUNS_TABLE).select("score").eq("x_id", uid).order("score", { ascending: false }).limit(1),
-        supabase.from(TASKS_TABLE).select("task_id").eq("x_id", uid),
-      ]);
-      if (runs?.length) setBest(runs[0].score);
-      if (tasks) setTaskPoints(tasks.length * TASK_POINTS);
-    })().catch(() => { /* tables may not exist yet */ });
+    supabase.from(LEADERBOARD_TABLE).select("total_points").eq("x_id", session.user.id).maybeSingle()
+      .then(({ data }) => setTotal(data?.total_points ?? 0))
+      .catch(() => { /* table may not exist yet */ });
   }, [session]);
 
   if (loading) {
@@ -48,7 +42,6 @@ export default function Hub() {
 
   const handle = handleFrom(session);
   const avatar = session?.user.user_metadata?.avatar_url;
-  const total = (best ?? 0) + taskPoints;
 
   return (
     <div className="ap-root">
@@ -68,25 +61,26 @@ export default function Hub() {
       <div className="ap-body">
         <p className="ap-eyebrow">{BRAND.name} — BASE CAMP</p>
         <h1 className="ap-h1">CHOOSE YOUR ORDERS</h1>
-        <p className="ap-lede">Earn points two ways. The highest scores take the guaranteed spots.</p>
+        <p className="ap-lede">Every run and every task adds to one running total. Highest totals take the guaranteed spots.</p>
 
         <div className="ap-points">
           <span>TOTAL POINTS</span>
-          <b>{total.toLocaleString()}</b>
-          <small>
-            {best === null ? "No run logged yet" : `Best run ${best.toLocaleString()}`}
-            {taskPoints > 0 && ` · ${taskPoints.toLocaleString()} from tasks`}
-          </small>
+          <b>{(total ?? 0).toLocaleString()}</b>
+          <small>{total === null ? "No points yet — go earn some" : "Across every run and task"}</small>
         </div>
 
         <div className="ap-tiles">
           <button className="ap-tile" data-primary="true" onClick={() => go("/play")}>
             <h3>▶ PLAY</h3>
-            <p>Take the range. Shoot hostiles, spare civilians, and set your score.</p>
+            <p>Take the range. Shoot hostiles, spare civilians, and add to your total.</p>
           </button>
           <button className="ap-tile" onClick={() => go("/tasks")}>
             <h3>★ EARN POINTS</h3>
             <p>Complete social missions for a flat point bonus each.</p>
+          </button>
+          <button className="ap-tile" onClick={() => go("/leaderboard")}>
+            <h3>☰ LEADERBOARD</h3>
+            <p>See where you rank against everyone else.</p>
           </button>
         </div>
       </div>
