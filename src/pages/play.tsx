@@ -22,15 +22,17 @@ export default function Play() {
   }, [loading, session, go]);
 
   /* Writes go through record_run() in Postgres, not a direct table
-     insert — the function ignores whatever we claim for "qualified"
-     and recomputes it server-side, so there's nothing to fake here. */
-  async function record(r: { score: number; qualified: boolean; civilians: number; seconds: number }) {
+     insert — it derives x_id from the session itself and adds this
+     run's score straight onto the player's leaderboard total, so
+     there's no client-editable "qualified" flag anymore. */
+  async function record(r: { score: number; civilians: number; seconds: number }) {
     if (!session) return;
     const { error } = await supabase.rpc("record_run", {
       p_score: r.score,
       p_civilians: r.civilians,
       p_seconds: r.seconds,
       p_handle: session.user.user_metadata?.user_name ?? null,
+      p_avatar_url: session.user.user_metadata?.avatar_url ?? null,
     });
     if (error) console.error("record_run failed:", error.message);
   }
