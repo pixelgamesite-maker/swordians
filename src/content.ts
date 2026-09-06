@@ -80,33 +80,3 @@ export function referralLink(refCode: string) {
   return `${window.location.origin}/?ref=${refCode}`;
 }
 
-/* ── The guide ────────────────────────────────────────────
-   Shown inside the profile menu as a collapsible "how this
-   works" section. Edit freely — nothing else reads this shape. */
-export const GUIDE = [
-  {
-    q: "How do I earn points?",
-    a: "Two ways: play the range, or complete tasks. Every point from both lands on the same running total shown on your profile and the leaderboard.",
-  },
-  {
-    q: "How does the range work?",
-    a: `Targets launch from below. Tap an enemy to shoot it — the weaker one is worth ${SCORING.enemyA} points, the tougher one ${SCORING.enemyB}. Tap a civilian by mistake and you lose ${Math.abs(SCORING.civilianHit)} points and a heart. You start with ${SCORING.healthMax} hearts — lose them all and the run ends, but whatever you scored is already added to your total.`,
-  },
-  {
-    q: "What do the pickups do?",
-    a: "A health pack restores a heart. A freeze pauses every target and the spawn timer for a few seconds — free time to clean up the screen. A grenade clears everything on screen at once, scoring and costing exactly as if you'd shot each target yourself.",
-  },
-  {
-    q: "What's the leaderboard for?",
-    a: "It ranks everyone by total points — every run, every task, all added together. The highest totals are who we're pulling from for guaranteed spots.",
-  },
-  {
-    q: "What's the referral link for?",
-    a: "Share it — anyone who signs in through your link counts toward your referral total, shown on your profile. It doesn't add points on its own, but referral count may factor into how spots are chosen.",
-  },
-  {
-    q: "Why does my wallet need to be bound?",
-    a: "Wallets are how we actually deliver spots once we pull names from the leaderboard — GTD or FCFS. It can only be set once, so double-check it before binding.",
-  },
-];
-
