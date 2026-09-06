@@ -117,8 +117,8 @@ export const PROFILE_CSS = `
 .pm-trigger[data-open="true"] .pm-caret{ transform:rotate(180deg); }
 
 .pm-panel{
-  position:absolute; top:100%; right:12px; z-index:40; margin-top:6px;
-  width:min(92vw,340px); max-height:80vh; overflow-y:auto;
+  position:absolute; top:100%; left:0; z-index:40; margin-top:6px;
+  width:min(88vw,340px); max-height:80vh; overflow-y:auto;
   background:#0d1118; border:3px solid rgba(127,166,189,.35);
   box-shadow:0 20px 50px rgba(0,0,0,.7); animation:pm-in .18s ease both;
 }
@@ -163,15 +163,6 @@ export const PROFILE_CSS = `
 .pm-bind:disabled{ background:rgba(127,166,189,.2); color:rgba(239,230,210,.4); cursor:default; }
 .pm-warn{ font-size:.95rem; color:#e0776e; margin:6px 0 0; }
 .pm-hint{ font-size:.9rem; color:rgba(239,230,210,.35); margin:8px 0 0; line-height:1.4; }
-
-.pm-guide-item{ border-bottom:1px solid rgba(127,166,189,.15); }
-.pm-guide-item:last-child{ border-bottom:none; }
-.pm-guide-item button{
-  width:100%; display:flex; justify-content:space-between; gap:10px; background:none; border:none;
-  cursor:pointer; padding:9px 0; text-align:left; color:#efe6d2; font-size:1.05rem;
-}
-.pm-guide-item i{ color:#f0b429; font-style:normal; flex-shrink:0; }
-.pm-guide-item p{ margin:0 0 10px; font-size:.98rem; color:rgba(239,230,210,.55); line-height:1.5; }
 
 .pm-signout{
   width:100%; font-family:'Press Start 2P',monospace; font-size:.5rem; letter-spacing:.08em; padding:11px;
