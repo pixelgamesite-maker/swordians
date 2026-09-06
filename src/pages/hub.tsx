@@ -44,6 +44,8 @@ export default function Hub() {
   return (
     <div className="ap-root">
       <style>{APP_CSS}{PROFILE_CSS}</style>
+
+      <div className="ap-bar">
         <ProfileMenu session={session} onSignedOut={() => go("/")} />
         <div className="ap-icons">
           <button className="ap-icon" onClick={toggleMute}>{muted ? "SOUND OFF" : "SOUND ON"}</button>
