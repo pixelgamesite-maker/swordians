@@ -4,7 +4,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { useAudio } from "../audio/AudioProvider";
 import ProfileMenu from "../components/site/ProfileMenu";
-import { APP_CSS } from "../components/retro/appTheme";
+import { APP_CSS, PROFILE_CSS } from "../components/retro/appTheme";
 import { FONT_LINK } from "../components/retro/theme";
 import { BRAND, LEADERBOARD_TABLE } from "../content";
 
@@ -43,9 +43,7 @@ export default function Hub() {
 
   return (
     <div className="ap-root">
-      <style>{APP_CSS}</style>
-
-      <div className="ap-bar">
+      <style>{APP_CSS}{PROFILE_CSS}</style>
         <ProfileMenu session={session} onSignedOut={() => go("/")} />
         <div className="ap-icons">
           <button className="ap-icon" onClick={toggleMute}>{muted ? "SOUND OFF" : "SOUND ON"}</button>
