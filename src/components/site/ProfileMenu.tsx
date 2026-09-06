@@ -2,25 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "../../lib/supabase";
 import { signOut } from "../../hooks/useAuth";
-import { GUIDE, LEADERBOARD_TABLE, RUNS_TABLE, WALLETS_TABLE, referralLink } from "../../content";
+import { LEADERBOARD_TABLE, RUNS_TABLE, WALLETS_TABLE, referralLink } from "../../content";
 
 const isEvm = (v: string) => /^0x[0-9a-fA-F]{40}$/.test(v.trim());
 const short = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
 
 type Profile = { total_points: number; ref_code: string | null; ref_count: number };
-
-function GuideItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="pm-guide-item">
-      <button onClick={() => setOpen((o) => !o)} aria-expanded={open}>
-        <span>{q}</span>
-        <i>{open ? "−" : "+"}</i>
-      </button>
-      {open && <p>{a}</p>}
-    </div>
-  );
-}
 
 export default function ProfileMenu({ session, onSignedOut }: { session: Session; onSignedOut: () => void }) {
   const [open, setOpen] = useState(false);
@@ -163,14 +150,6 @@ export default function ProfileMenu({ session, onSignedOut }: { session: Session
                 <p className="pm-hint">This can only be set once — double-check it before binding.</p>
               </>
             )}
-          </div>
-
-          {/* Guide */}
-          <div className="pm-section">
-            <p className="pm-label">HOW THIS WORKS</p>
-            {GUIDE.map((g) => (
-              <GuideItem key={g.q} {...g} />
-            ))}
           </div>
 
           <div className="pm-section">
