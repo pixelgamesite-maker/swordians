@@ -90,19 +90,11 @@ export const GUIDE = [
   },
   {
     q: "How does the range work?",
-    a: `Targets launch from below. Tap an enemy to shoot it — the weaker one is worth ${SCORING.enemyA} points, the tougher one ${SCORING.enemyB}. Tap a civilian by mistake and you lose ${Math.abs(SCORING.civilianHit)} points and a heart.`,
-  },
-  {
-    q: "What happens if I run out of hearts?",
-    a: `You start with ${SCORING.healthMax}. Hitting a civilian costs one. Hit zero and the run ends — whatever you scored is already added to your total.`,
+    a: `Targets launch from below. Tap an enemy to shoot it — the weaker one is worth ${SCORING.enemyA} points, the tougher one ${SCORING.enemyB}. Tap a civilian by mistake and you lose ${Math.abs(SCORING.civilianHit)} points and a heart. You start with ${SCORING.healthMax} hearts — lose them all and the run ends, but whatever you scored is already added to your total.`,
   },
   {
     q: "What do the pickups do?",
-    a: "A health pack restores a heart. A freeze pauses every target and the spawn timer for a few seconds — free time to clean up the screen. A grenade clears everything on screen at once, enemies and civilians alike, scoring and costing exactly as if you'd shot each one yourself.",
-  },
-  {
-    q: "Why does the background change?",
-    a: "The arena shifts as your score climbs during a single run — a visible sign of how far that run has gone. It resets each time you play again.",
+    a: "A health pack restores a heart. A freeze pauses every target and the spawn timer for a few seconds — free time to clean up the screen. A grenade clears everything on screen at once, scoring and costing exactly as if you'd shot each target yourself.",
   },
   {
     q: "What's the leaderboard for?",
