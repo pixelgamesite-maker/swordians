@@ -16,6 +16,7 @@ export const PINNED_TWEET_URL = "";
 export const RUNS_TABLE = "game_runs";         // history log — x_id, handle, score, civilians, seconds
 export const TASKS_TABLE = "social_tasks";     // x_id, task_id, completed_at
 export const LEADERBOARD_TABLE = "leaderboard"; // x_id, handle, avatar_url, total_points — the single running total
+export const WALLETS_TABLE = "wallets";          // x_id, wallet — private, owner-only reads
 
 /* Display cap for the leaderboard page. Everyone can still play —
    this is how many rows the leaderboard page shows/ranks, not a
@@ -73,3 +74,47 @@ export const TASKS = [
   { id: "repost", label: "Repost the pinned post", desc: "Put it in front of your followers.", url: PINNED_TWEET_URL },
   { id: "tag", label: "Tag 2 friends", desc: "Drop two mutuals in the replies.", url: PINNED_TWEET_URL },
 ];
+
+/* Builds a shareable referral link from a user's ref code. */
+export function referralLink(refCode: string) {
+  return `${window.location.origin}/?ref=${refCode}`;
+}
+
+/* ── The guide ────────────────────────────────────────────
+   Shown inside the profile menu as a collapsible "how this
+   works" section. Edit freely — nothing else reads this shape. */
+export const GUIDE = [
+  {
+    q: "How do I earn points?",
+    a: "Two ways: play the range, or complete tasks. Every point from both lands on the same running total shown on your profile and the leaderboard.",
+  },
+  {
+    q: "How does the range work?",
+    a: `Targets launch from below. Tap an enemy to shoot it — the weaker one is worth ${SCORING.enemyA} points, the tougher one ${SCORING.enemyB}. Tap a civilian by mistake and you lose ${Math.abs(SCORING.civilianHit)} points and a heart.`,
+  },
+  {
+    q: "What happens if I run out of hearts?",
+    a: `You start with ${SCORING.healthMax}. Hitting a civilian costs one. Hit zero and the run ends — whatever you scored is already added to your total.`,
+  },
+  {
+    q: "What do the pickups do?",
+    a: "A health pack restores a heart. A freeze pauses every target and the spawn timer for a few seconds — free time to clean up the screen. A grenade clears everything on screen at once, enemies and civilians alike, scoring and costing exactly as if you'd shot each one yourself.",
+  },
+  {
+    q: "Why does the background change?",
+    a: "The arena shifts as your score climbs during a single run — a visible sign of how far that run has gone. It resets each time you play again.",
+  },
+  {
+    q: "What's the leaderboard for?",
+    a: "It ranks everyone by total points — every run, every task, all added together. The highest totals are who we're pulling from for guaranteed spots.",
+  },
+  {
+    q: "What's the referral link for?",
+    a: "Share it — anyone who signs in through your link counts toward your referral total, shown on your profile. It doesn't add points on its own, but referral count may factor into how spots are chosen.",
+  },
+  {
+    q: "Why does my wallet need to be bound?",
+    a: "Wallets are how we actually deliver spots once we pull names from the leaderboard — GTD or FCFS. It can only be set once, so double-check it before binding.",
+  },
+];
+
