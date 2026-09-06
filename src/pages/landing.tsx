@@ -39,6 +39,22 @@ export default function Landing() {
     };
   }, []);
 
+  /* Capture ?ref=CODE on arrival, before the person even signs in.
+     First-touch wins — if a code is already stored, a later visit
+     via a different link doesn't overwrite it. Consumed once, in
+     callback.tsx, right after login completes. */
+  useEffect(() => {
+    const ref = new URLSearchParams(window.location.search).get("ref");
+    if (!ref) return;
+    try {
+      if (!localStorage.getItem("sw_ref_code")) {
+        localStorage.setItem("sw_ref_code", ref);
+      }
+    } catch {
+      /* storage unavailable — referral just won't be tracked */
+    }
+  }, []);
+
   const start = useCallback(() => {
     if (phase !== "boot") return;
     setPhase("quest");
