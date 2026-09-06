@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { supabase } from "../lib/supabase";
-import { useAuth, handleFrom, signOut } from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
 import { useAudio } from "../audio/AudioProvider";
+import ProfileMenu from "../components/site/ProfileMenu";
 import { APP_CSS } from "../components/retro/appTheme";
 import { FONT_LINK } from "../components/retro/theme";
 import { BRAND, LEADERBOARD_TABLE } from "../content";
@@ -34,27 +35,20 @@ export default function Hub() {
       .catch(() => { /* table may not exist yet */ });
   }, [session]);
 
-  if (loading) {
+  if (loading || !session) {
     return <div className="ap-root"><style>{APP_CSS}</style>
       <div className="ap-center"><span className="ap-spinner">LOADING...</span></div>
     </div>;
   }
-
-  const handle = handleFrom(session);
-  const avatar = session?.user.user_metadata?.avatar_url;
 
   return (
     <div className="ap-root">
       <style>{APP_CSS}</style>
 
       <div className="ap-bar">
-        <div className="ap-who">
-          {avatar && <img src={avatar} alt="" />}
-          <b>{handle ? `@${handle}` : "SOLDIER"}</b>
-        </div>
+        <ProfileMenu session={session} onSignedOut={() => go("/")} />
         <div className="ap-icons">
           <button className="ap-icon" onClick={toggleMute}>{muted ? "SOUND OFF" : "SOUND ON"}</button>
-          <button className="ap-icon" onClick={() => signOut().then(() => go("/"))}>EXIT</button>
         </div>
       </div>
 
