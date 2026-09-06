@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "../../hooks/useAuth";
+import { supabase } from "../../lib/supabase";
 import { FONT_LINK, display } from "../../components/retro/theme";
 
 /** How long to wait for supabase-js to parse the tokens out of the URL
@@ -12,6 +13,7 @@ export default function Callback() {
   const [, go] = useLocation();
   const { session, loading } = useAuth();
   const [timedOut, setTimedOut] = useState(false);
+  const [settingUp, setSettingUp] = useState(false);
 
   useEffect(() => {
     const l = document.createElement("link");
@@ -28,12 +30,50 @@ export default function Callback() {
 
   useEffect(() => {
     if (oauthError) return;
-    if (!loading && session) {
-      go("/hub");
-      return;
+    if (loading || !session) {
+      const t = window.setTimeout(() => setTimedOut(true), TIMEOUT_MS);
+      return () => window.clearTimeout(t);
     }
-    const t = window.setTimeout(() => setTimedOut(true), TIMEOUT_MS);
-    return () => window.clearTimeout(t);
+
+    /* Session exists — create the profile (so a ref code exists from
+       the very first visit) and redeem any stored referral before
+       handing off. Both calls are safe to fail silently: a broken
+       ensure_profile just means the profile menu builds itself later
+       from record_run/claim_task instead, and record_referral is a
+       one-shot best-effort that only ever succeeds once anyway. */
+    let cancelled = false;
+    (async () => {
+      setSettingUp(true);
+      const meta = session.user.user_metadata ?? {};
+      await supabase
+        .rpc("ensure_profile", {
+          p_handle: meta.user_name ?? meta.preferred_username ?? null,
+          p_avatar_url: meta.avatar_url ?? null,
+        })
+        .then(undefined, (e) => console.warn("ensure_profile failed:", e));
+
+      let refCode: string | null = null;
+      try {
+        refCode = localStorage.getItem("sw_ref_code");
+      } catch {
+        /* ignore */
+      }
+      if (refCode) {
+        await supabase.rpc("record_referral", { p_ref_code: refCode })
+          .then(undefined, (e) => console.warn("record_referral failed:", e));
+        try {
+          localStorage.removeItem("sw_ref_code");
+        } catch {
+          /* ignore */
+        }
+      }
+
+      if (!cancelled) go("/hub");
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [loading, session, oauthError, go]);
 
   const failed = Boolean(oauthError) || timedOut;
@@ -46,7 +86,7 @@ export default function Callback() {
 
       {!failed ? (
         <>
-          <p style={styles.line}>OPENING THE GATE...</p>
+          <p style={styles.line}>{settingUp ? "SETTING UP YOUR PROFILE..." : "OPENING THE GATE..."}</p>
           <small style={styles.small}>VERIFYING WITH X</small>
         </>
       ) : (
