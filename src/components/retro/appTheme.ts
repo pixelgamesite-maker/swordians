@@ -104,3 +104,77 @@ export const LEADERBOARD_CSS = `
 .lb-handle{ font-size:1.1rem; color:#efe6d2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .lb-pts{ font-family:'Press Start 2P',monospace; font-size:.62rem; color:#f0b429; }
 `;
+
+export const PROFILE_CSS = `
+.pm-trigger{
+  display:flex; align-items:center; gap:9px; background:none; border:none; cursor:pointer;
+  padding:4px 8px 4px 4px; border-radius:4px; transition:background .15s;
+}
+.pm-trigger:hover{ background:rgba(127,166,189,.12); }
+.pm-trigger img{ width:28px; height:28px; border:2px solid rgba(127,166,189,.4); border-radius:50%; }
+.pm-trigger b{ font-family:'Press Start 2P',monospace; font-size:.55rem; font-weight:400; letter-spacing:.06em; color:#efe6d2; }
+.pm-caret{ color:#7fa6bd; font-size:.6rem; transition:transform .15s; }
+.pm-trigger[data-open="true"] .pm-caret{ transform:rotate(180deg); }
+
+.pm-panel{
+  position:absolute; top:100%; right:12px; z-index:40; margin-top:6px;
+  width:min(92vw,340px); max-height:80vh; overflow-y:auto;
+  background:#0d1118; border:3px solid rgba(127,166,189,.35);
+  box-shadow:0 20px 50px rgba(0,0,0,.7); animation:pm-in .18s ease both;
+}
+@keyframes pm-in{ from{opacity:0; transform:translateY(-6px)} to{opacity:1; transform:none} }
+
+.pm-section{ padding:16px; border-bottom:2px solid rgba(127,166,189,.18); }
+.pm-section:last-child{ border-bottom:none; }
+.pm-label{ font-family:'Press Start 2P',monospace; font-size:.48rem; letter-spacing:.16em; color:#7fa6bd; margin:0 0 10px; }
+
+.pm-stats{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+.pm-stat{ text-align:center; border:2px solid rgba(127,166,189,.25); padding:10px 4px; }
+.pm-stat b{ display:block; font-family:'Press Start 2P',monospace; font-size:.72rem; color:#f0b429; font-weight:400; }
+.pm-stat span{ display:block; margin-top:6px; font-size:.85rem; letter-spacing:.06em; color:rgba(239,230,210,.5); text-transform:uppercase; }
+
+.pm-ref-row{ display:flex; gap:6px; }
+.pm-ref-row input{
+  flex:1; background:#070a0e; border:2px solid rgba(127,166,189,.3); color:#efe6d2;
+  font-family:'VT323',monospace; font-size:1.05rem; padding:9px 10px; min-width:0;
+}
+.pm-copy{
+  font-family:'Press Start 2P',monospace; font-size:.5rem; letter-spacing:.06em; padding:0 12px;
+  color:#070a0e; background:#f0b429; border:2px solid #070a0e; cursor:pointer; flex-shrink:0;
+}
+.pm-copy[data-copied="true"]{ background:#7fa6bd; }
+
+.pm-wallet-bound{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  border:2px solid rgba(127,166,189,.25); padding:10px; font-size:1.05rem; color:rgba(239,230,210,.7);
+}
+.pm-wallet-bound b{ color:#f0b429; font-family:'VT323',monospace; font-size:1.05rem; font-weight:400; }
+.pm-locked{ font-family:'Press Start 2P',monospace; font-size:.42rem; color:#7fa6bd; letter-spacing:.08em; flex-shrink:0; }
+
+.pm-in{
+  width:100%; background:#070a0e; border:2px solid rgba(127,166,189,.3); color:#efe6d2;
+  font-family:'VT323',monospace; font-size:1.05rem; padding:9px 10px; margin-bottom:8px;
+}
+.pm-in:focus{ outline:none; border-color:#f0b429; }
+.pm-bind{
+  width:100%; font-family:'Press Start 2P',monospace; font-size:.55rem; letter-spacing:.08em; padding:11px;
+  color:#070a0e; background:#f0b429; border:2px solid #070a0e; cursor:pointer;
+}
+.pm-bind:disabled{ background:rgba(127,166,189,.2); color:rgba(239,230,210,.4); cursor:default; }
+.pm-warn{ font-size:.95rem; color:#e0776e; margin:6px 0 0; }
+.pm-hint{ font-size:.9rem; color:rgba(239,230,210,.35); margin:8px 0 0; line-height:1.4; }
+
+.pm-guide-item{ border-bottom:1px solid rgba(127,166,189,.15); }
+.pm-guide-item:last-child{ border-bottom:none; }
+.pm-guide-item button{
+  width:100%; display:flex; justify-content:space-between; gap:10px; background:none; border:none;
+  cursor:pointer; padding:9px 0; text-align:left; color:#efe6d2; font-size:1.05rem;
+}
+.pm-guide-item i{ color:#f0b429; font-style:normal; flex-shrink:0; }
+.pm-guide-item p{ margin:0 0 10px; font-size:.98rem; color:rgba(239,230,210,.55); line-height:1.5; }
+
+.pm-signout{
+  width:100%; font-family:'Press Start 2P',monospace; font-size:.5rem; letter-spacing:.08em; padding:11px;
+  color:#e0776e; background:none; border:2px solid rgba(224,119,110,.4); cursor:pointer;
+}
+`;
