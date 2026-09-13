@@ -47,8 +47,15 @@ export const PICKUPS = {
   healthChance: 0.05,   // heals 1 heart, capped at healthMax
   freezeChance: 0.04,   // pauses spawning + movement for freezeMs
   grenadeChance: 0.03,  // clears every enemy/civilian on screen
+  coinChance: 0.06,     // ⚠️ not specified — spawn rate guess, tune freely
   freezeMs: 3000,
 };
+
+/* $SWOL is a completely separate balance from points/leaderboard —
+   it never touches score, never touches the leaderboard ranking.
+   It's tracked in its own column and shown as its own number. */
+export const SWOL_PER_TAP = 50;
+export const COIN_SPRITE = "/swoldiers-coin.png";
 
 /* ── Environments ─────────────────────────────────────────
    The arena background changes as the player's LIVE SCORE in
@@ -79,4 +86,3 @@ export const TASKS = [
 export function referralLink(refCode: string) {
   return `${window.location.origin}/?ref=${refCode}`;
 }
-
