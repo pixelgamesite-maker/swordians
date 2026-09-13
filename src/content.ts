@@ -65,7 +65,7 @@ export const COIN_SPRITE = "/swoldiers-coin.png";
    a realistic run scores once the game is tuned.               */
 export const ENVIRONMENTS = [
   { threshold: 0,    src: "/environment.png" },
-  { threshold: 600,  src: "/environment2.jpg" },
+  { threshold: 600,  src: "/environment-2.jpg" },
   { threshold: 1400, src: "/environment3.jpg" },
   { threshold: 2400, src: "/environment4.jpg" },
   { threshold: 3600, src: "/environment5.jpg" },
