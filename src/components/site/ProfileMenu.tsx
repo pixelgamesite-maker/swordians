@@ -7,7 +7,7 @@ import { LEADERBOARD_TABLE, RUNS_TABLE, WALLETS_TABLE, referralLink } from "../.
 const isEvm = (v: string) => /^0x[0-9a-fA-F]{40}$/.test(v.trim());
 const short = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
 
-type Profile = { total_points: number; ref_code: string | null; ref_count: number };
+type Profile = { total_points: number; ref_code: string | null; ref_count: number; swol_balance: number };
 
 export default function ProfileMenu({ session, onSignedOut }: { session: Session; onSignedOut: () => void }) {
   const [open, setOpen] = useState(false);
@@ -45,9 +45,9 @@ export default function ProfileMenu({ session, onSignedOut }: { session: Session
     if (!open || profile) return;
     const uid = session.user.id;
 
-    supabase.from(LEADERBOARD_TABLE).select("total_points, ref_code, ref_count").eq("x_id", uid).maybeSingle()
-      .then(({ data }) => setProfile(data ?? { total_points: 0, ref_code: null, ref_count: 0 }))
-      .catch(() => setProfile({ total_points: 0, ref_code: null, ref_count: 0 }));
+    supabase.from(LEADERBOARD_TABLE).select("total_points, ref_code, ref_count, swol_balance").eq("x_id", uid).maybeSingle()
+      .then(({ data }) => setProfile(data ?? { total_points: 0, ref_code: null, ref_count: 0, swol_balance: 0 }))
+      .catch(() => setProfile({ total_points: 0, ref_code: null, ref_count: 0, swol_balance: 0 }));
 
     supabase.from(RUNS_TABLE).select("score").eq("x_id", uid).order("score", { ascending: false }).limit(1)
       .then(({ data }) => setBest(data?.[0]?.score ?? 0))
@@ -108,6 +108,16 @@ export default function ProfileMenu({ session, onSignedOut }: { session: Session
                 <b>{profile?.ref_count ?? 0}</b>
                 <span>Referred</span>
               </div>
+            </div>
+          </div>
+
+          {/* $SWOL — deliberately its own section, not folded into the
+              points grid above, since it's a completely separate balance. */}
+          <div className="pm-section">
+            <p className="pm-label">$SWOL</p>
+            <div className="pm-swol-row">
+              <img src="/swoldiers-coin.png" alt="" />
+              <b>{(profile?.swol_balance ?? 0).toLocaleString()}</b>
             </div>
           </div>
 
