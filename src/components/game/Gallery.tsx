@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAudio } from "../../audio/AudioProvider";
-import { SCORING, PICKUPS, ENVIRONMENTS } from "../../content";
+import { SCORING, PICKUPS, ENVIRONMENTS, SWOL_PER_TAP, COIN_SPRITE } from "../../content";
 
 /* ─────────────────────────────────────────────────────────────
    TUNING — everything that decides how the game feels.
@@ -21,7 +21,7 @@ function difficulty(t: number) {
   };
 }
 
-type Kind = "enemyA" | "enemyB" | "civilian" | "health" | "freeze" | "grenade";
+type Kind = "enemyA" | "enemyB" | "civilian" | "health" | "freeze" | "grenade" | "coin";
 type Target = {
   id: number;
   kind: Kind;
@@ -39,10 +39,11 @@ type Phase = "ready" | "playing" | "over";
 const ENEMY_A_SPRITE = "/enemy-1.png";  // 20 pts
 const ENEMY_B_SPRITE = "/enemy-2.png";  // 10 pts
 const CIV_SPRITES = ["/civilian-1.png", "/civilian-2.png"];
-const PICKUP_SPRITE: Record<"health" | "freeze" | "grenade", string> = {
+const PICKUP_SPRITE: Record<"health" | "freeze" | "grenade" | "coin", string> = {
   health: "/health-pack.png",
   freeze: "/freez.png",
   grenade: "/grenade.png",
+  coin: COIN_SPRITE,
 };
 
 /** Weighted pick across everything that can spawn this frame. */
@@ -63,6 +64,9 @@ function pickKind(t: number): Kind {
   acc += PICKUPS.grenadeChance;
   if (roll < acc) return "grenade";
 
+  acc += PICKUPS.coinChance;
+  if (roll < acc) return "coin";
+
   // Remainder splits between the two enemy tiers, weighted toward
   // the cheaper one so 20-pt hits feel earned rather than routine.
   const remainder = Math.max(0, 1 - acc);
@@ -78,6 +82,7 @@ function spriteFor(kind: Kind): string {
     case "health": return PICKUP_SPRITE.health;
     case "freeze": return PICKUP_SPRITE.freeze;
     case "grenade": return PICKUP_SPRITE.grenade;
+    case "coin": return PICKUP_SPRITE.coin;
   }
 }
 
@@ -92,7 +97,7 @@ function currentEnvIndex(score: number) {
 export default function Gallery({
   onFinish,
 }: {
-  onFinish?: (r: { score: number; civilians: number; seconds: number }) => void;
+  onFinish?: (r: { score: number; civilians: number; seconds: number; coins: number }) => void;
 }) {
   const { playShot } = useAudio();
 
@@ -111,6 +116,7 @@ export default function Gallery({
   const [combo, setCombo] = useState(0);
   const [civilians, setCivilians] = useState(0);
   const [hearts, setHearts] = useState(SCORING.healthMax);
+  const [coins, setCoins] = useState(0);
   const [recoil, setRecoil] = useState(false);
   const [flash, setFlash] = useState(false);
   const [shake, setShake] = useState(false);
@@ -121,6 +127,7 @@ export default function Gallery({
   const scoreRef = useRef(0);
   const comboRef = useRef(0);
   const civRef = useRef(0);
+  const coinsRef = useRef(0);
   const heartsRef = useRef(SCORING.healthMax);
   const phaseRef = useRef<Phase>("ready");
   useEffect(() => { phaseRef.current = phase; }, [phase]);
@@ -167,6 +174,7 @@ export default function Gallery({
       score: scoreRef.current,
       civilians: civRef.current,
       seconds: Math.round(elapsed.current),
+      coins: coinsRef.current,
     });
   }, [onFinish]);
 
@@ -290,6 +298,12 @@ export default function Gallery({
     } else if (t.kind === "freeze") {
       frozenUntil.current = performance.now() + PICKUPS.freezeMs;
       addPopup(t.x, t.y, "FROZEN", false);
+    } else if (t.kind === "coin") {
+      // Deliberately untouched by score/combo/hearts — $SWOL is its
+      // own balance, tallied here and only submitted at run's end.
+      coinsRef.current += 1;
+      setCoins(coinsRef.current);
+      addPopup(t.x, t.y, `+${SWOL_PER_TAP} SWOL`, false);
     } else if (t.kind === "grenade") {
       addPopup(t.x, t.y, "BOOM", false);
       setShake(true);
@@ -334,8 +348,9 @@ export default function Gallery({
     scoreRef.current = 0;
     comboRef.current = 0;
     civRef.current = 0;
+    coinsRef.current = 0;
     heartsRef.current = SCORING.healthMax;
-    setScore(0); setCombo(0); setCivilians(0); setHearts(SCORING.healthMax);
+    setScore(0); setCombo(0); setCivilians(0); setHearts(SCORING.healthMax); setCoins(0);
     setPopups([]); setEnvIdx(0); setFrozen(false);
     setPhase("playing");
   }
@@ -360,6 +375,10 @@ export default function Gallery({
         <div className="gm-score">
           <span>SCORE</span>
           <b>{score}</b>
+        </div>
+        <div className="gm-swol">
+          <img src="/swoldiers-coin.png" alt="" />
+          <b>{coins * SWOL_PER_TAP}</b>
         </div>
         <div className="gm-hearts">
           {Array.from({ length: SCORING.healthMax }).map((_, i) => (
@@ -444,6 +463,9 @@ const GAME_CSS = `
 }
 .gm-score span{ font-family:'Press Start 2P',monospace; font-size:.45rem; letter-spacing:.16em; color:#7fa6bd; display:block; margin-bottom:5px; }
 .gm-score b{ font-family:'Press Start 2P',monospace; font-size:.95rem; color:#f0b429; font-weight:400; }
+.gm-swol{ display:flex; align-items:center; gap:6px; }
+.gm-swol img{ width:20px; height:20px; image-rendering:pixelated; }
+.gm-swol b{ font-family:'Press Start 2P',monospace; font-size:.72rem; color:#f0c94a; font-weight:400; }
 .gm-hearts{ display:flex; gap:6px; }
 .gm-hearts i{ font-style:normal; width:16px; height:16px; }
 .gm-hearts i::before{ content:"♥"; color:#8e2b24; font-size:1.1rem; line-height:1; }
