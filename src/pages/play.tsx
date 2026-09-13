@@ -24,13 +24,16 @@ export default function Play() {
   /* Writes go through record_run() in Postgres, not a direct table
      insert — it derives x_id from the session itself and adds this
      run's score straight onto the player's leaderboard total, so
-     there's no client-editable "qualified" flag anymore. */
-  async function record(r: { score: number; civilians: number; seconds: number }) {
+     there's no client-editable "qualified" flag anymore. $SWOL from
+     coins is passed separately and lands on its own balance column —
+     the function never mixes it into total_points. */
+  async function record(r: { score: number; civilians: number; seconds: number; coins: number }) {
     if (!session) return;
     const { error } = await supabase.rpc("record_run", {
       p_score: r.score,
       p_civilians: r.civilians,
       p_seconds: r.seconds,
+      p_coins: r.coins,
       p_handle: session.user.user_metadata?.user_name ?? null,
       p_avatar_url: session.user.user_metadata?.avatar_url ?? null,
     });
