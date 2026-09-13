@@ -25,6 +25,13 @@ export const APP_CSS = `
 }
 .ap-icon:hover{ color:#f0b429; border-color:#f0b429; }
 
+.ap-swol-badge{
+  display:flex; align-items:center; gap:6px; padding:8px 10px;
+  border:2px solid rgba(240,180,41,.4); background:rgba(240,180,41,.06);
+}
+.ap-swol-badge img{ width:16px; height:16px; image-rendering:pixelated; }
+.ap-swol-badge b{ font-family:'Press Start 2P',monospace; font-size:.6rem; color:#f0c94a; font-weight:400; }
+
 .ap-body{ flex:1; width:100%; max-width:640px; margin:0 auto; padding:28px 18px 40px; }
 .ap-eyebrow{ font-family:${display}; font-size:.5rem; letter-spacing:.22em; color:#7fa6bd; margin:0 0 12px; }
 .ap-h1{ font-family:${display}; font-size:clamp(1rem,5vw,1.5rem); margin:0 0 10px; line-height:1.4; }
