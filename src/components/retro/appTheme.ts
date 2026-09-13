@@ -133,6 +133,13 @@ export const PROFILE_CSS = `
 .pm-stat b{ display:block; font-family:'Press Start 2P',monospace; font-size:.72rem; color:#f0b429; font-weight:400; }
 .pm-stat span{ display:block; margin-top:6px; font-size:.85rem; letter-spacing:.06em; color:rgba(239,230,210,.5); text-transform:uppercase; }
 
+.pm-swol-row{
+  display:flex; align-items:center; gap:10px; padding:10px 12px;
+  border:2px solid rgba(240,180,41,.4); background:rgba(240,180,41,.06);
+}
+.pm-swol-row img{ width:24px; height:24px; image-rendering:pixelated; }
+.pm-swol-row b{ font-family:'Press Start 2P',monospace; font-size:.85rem; color:#f0c94a; font-weight:400; }
+
 .pm-ref-row{ display:flex; gap:6px; }
 .pm-ref-row input{
   flex:1; background:#070a0e; border:2px solid rgba(127,166,189,.3); color:#efe6d2;
