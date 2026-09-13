@@ -13,6 +13,7 @@ export default function Hub() {
   const { session, loading } = useAuth();
   const { muted, toggleMute } = useAudio();
   const [total, setTotal] = useState<number | null>(null);
+  const [swol, setSwol] = useState<number | null>(null);
 
   useEffect(() => {
     const l = document.createElement("link");
@@ -27,11 +28,16 @@ export default function Hub() {
 
   /* The leaderboard row IS the running total — every run and every
      task's points land on it via record_run()/claim_task(), so this
-     is a single read instead of summing two tables client-side. */
+     is a single read instead of summing two tables client-side.
+     swol_balance rides along in the same row/query — it's a separate
+     column, not summed into total_points. */
   useEffect(() => {
     if (!session) return;
-    supabase.from(LEADERBOARD_TABLE).select("total_points").eq("x_id", session.user.id).maybeSingle()
-      .then(({ data }) => setTotal(data?.total_points ?? 0))
+    supabase.from(LEADERBOARD_TABLE).select("total_points, swol_balance").eq("x_id", session.user.id).maybeSingle()
+      .then(({ data }) => {
+        setTotal(data?.total_points ?? 0);
+        setSwol(data?.swol_balance ?? 0);
+      })
       .catch(() => { /* table may not exist yet */ });
   }, [session]);
 
@@ -48,6 +54,10 @@ export default function Hub() {
       <div className="ap-bar">
         <ProfileMenu session={session} onSignedOut={() => go("/")} />
         <div className="ap-icons">
+          <div className="ap-swol-badge">
+            <img src="/swoldiers-coin.png" alt="" />
+            <b>{(swol ?? 0).toLocaleString()}</b>
+          </div>
           <button className="ap-icon" onClick={toggleMute}>{muted ? "SOUND OFF" : "SOUND ON"}</button>
         </div>
       </div>
